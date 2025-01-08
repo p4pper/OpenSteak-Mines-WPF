@@ -37,6 +37,8 @@ namespace OpenSteak_Mines_WPF
         private void t1_Click(object sender, RoutedEventArgs e)
         {
             this.api.StartGame();
+
+           
         }
 
         private void BetAmountTxt_TextChanged(object sender, TextChangedEventArgs e)
@@ -66,6 +68,11 @@ namespace OpenSteak_Mines_WPF
             {
                 textBox.Text = "0.00";
             }
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.api.StartGame();
         }
     }
 }
