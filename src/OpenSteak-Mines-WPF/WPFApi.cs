@@ -137,7 +137,7 @@ namespace OpenSteak_Mines_WPF
         /// <summary>Updates the balance label in the GUI to reflect the current balance.</summary>
         protected override void UpdateBalanceGUI()
         {
-            this.balanceLabel.Content = "Balance: " + this.api.GetBalance().ToString("0.00");
+            this.balanceLabel.Content = "Balance: " + Math.Round(this.api.GetBalance(), 2).ToString("0.00");
         }
 
         /// <summary>
