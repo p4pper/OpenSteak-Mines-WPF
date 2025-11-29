@@ -1,43 +1,59 @@
-﻿using System.Globalization;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using OpenSteak_Mines_WPF.Games;
 using OpenSteak_Mines_WPF.Util;
 
 namespace OpenSteak_Mines_WPF
 {
+    using SkiaSharp.Views.WPF;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MinesWPF _gui;
+        private readonly MinesWpf _gui;
+
+        // Per-session money change (delta) series; each item is the net result of a session
+        private readonly List<double> _sessionDeltaY = new List<double>();
 
         public MainWindow()
         {
             InitializeComponent();
-            _gui = new MinesWPF(
+            _gui = new MinesWpf(
                 MinesGrid,
-                this,
                 CashOutOrStartButton,
                 mineCombo,
                 playerBalText,
                 payoutMultiplierLbl,
-                betAmountTxt);
+                betAmountTxt,
+                BetReturnLabelBeauty,
+                BetReturnTotalMoneyBeauty,
+                PopupBorder
+                );
 
-            betAmountTxt.TextChanged += BetAmountTxt_TextChanged;
+            MoneyInput.AttachInput(
+                betAmountTxt,
+                _gui.GetBalanceDynamically(),
+                ShowErrorForFiveSeconds
+                );
             
             // Hide Error Message
             errorMsgLabel.Visibility = Visibility.Hidden;
         }
         
+
         // Error Handling
         private readonly object _errorLock = new object();
         private bool _isErrorMessageShowing = false;
 
-      
-        private void BetAmountTxt_TextChanged(object sender, TextChangedEventArgs e)
+       
+        /*private void BetAmountTxt_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!(sender is TextBox betAmountTextBox))
                 return;
@@ -82,7 +98,7 @@ namespace OpenSteak_Mines_WPF
 
             // Reattach event
             betAmountTextBox.TextChanged += BetAmountTxt_TextChanged;
-        }
+        }*/
 
         private void ShowErrorForFiveSeconds(string message)
         {
@@ -119,7 +135,8 @@ namespace OpenSteak_Mines_WPF
         }
         private void CashOutOrStartButton_Click(object sender, RoutedEventArgs e)
         {
-            this._gui.StartOrCashout();
+            if(!_isErrorMessageShowing)
+                _gui.StartOrCashout();
         }
 
         private void Window_Closed(object sender, System.EventArgs e)
