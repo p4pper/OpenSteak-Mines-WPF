@@ -3,7 +3,6 @@ using OpenSteak_Mines_WPF.Util;
 
 namespace OpenSteak_Mines_WPF
 {
-    using SkiaSharp.Views.WPF;
     using System;
     using System.Collections.Generic;
     using System.Linq;
