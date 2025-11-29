@@ -1,70 +1,52 @@
-﻿
+﻿using System.Globalization;
+using System.Windows.Controls;
+using System.Windows.Input;
+using OpenSteak_Mines_WPF.Util;
 
 namespace OpenSteak_Mines_WPF
 {
-    using System.Globalization;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Controls;
-    using OpenSteakMines;
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private WPFApi gui;
-        private GameAPI api;
+        private readonly MinesWPF _gui;
 
         public MainWindow()
         {
-            this.InitializeComponent();
-            this.api = new GameAPI();
-            this.gui = new WPFApi(
-                this.api,
-                this.api.GetGridSize(),
-                this.api.GetLayout(),
-                this.MinesGrid,
+            InitializeComponent();
+            _gui = new MinesWPF(
+                MinesGrid,
                 this,
-                this.cashOutORStartBtn,
-                this.mineCombo,
-                this.playerBalText,
-                this.payoutMultiplierLbl,
-                this.betAmountTxt);
+                CashOutOrStartButton,
+                mineCombo,
+                playerBalText,
+                payoutMultiplierLbl,
+                betAmountTxt);
 
-            this.api.InitializeSelf(this.gui);
-            this.betAmountTxt.TextChanged += this.BetAmountTxt_TextChanged;
-
+            betAmountTxt.TextChanged += BetAmountTxt_TextChanged;
+            
             // Hide Error Message
             errorMsgLabel.Visibility = Visibility.Hidden;
         }
+        
+        // Error Handling
+        private readonly object _errorLock = new object();
+        private bool _isErrorMessageShowing = false;
 
-        private void t1_Click(object sender, RoutedEventArgs e)
-        {
-            this.api.StartGame();
-
-           
-        }
-
-        private bool isMessageError = false;
-        private readonly object errorLock = new object();
-        private bool isErrorShowing = false;
-
+      
         private void BetAmountTxt_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var textBox = sender as TextBox;
-            if (textBox == null)
-            {
+            if (!(sender is TextBox betAmountTextBox))
                 return;
-            }
+            
+            betAmountTextBox.TextChanged -= BetAmountTxt_TextChanged;
 
-            // Detach event to avoid recursive calls
-            textBox.TextChanged -= BetAmountTxt_TextChanged;
-
-            string text = textBox.Text.Replace(".", "").Replace(",", ""); // Remove any existing formatting
-
+            string text = betAmountTextBox.Text.Replace(".", "").Replace(",", ""); // Make the textbox into a pure number
             bool isMessageError = false;
-
+            
             if (decimal.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal number))
             {
                 // Scale down to 2 decimal places for display
@@ -72,24 +54,24 @@ namespace OpenSteak_Mines_WPF
                 string formattedText = number.ToString("0.00", CultureInfo.InvariantCulture);
 
                 // Update text only if changed
-                if (textBox.Text != formattedText)
+                if (betAmountTextBox.Text != formattedText)
                 {
-                    textBox.Text = formattedText;
+                    betAmountTextBox.Text = formattedText;
                 }
             }
             else
             {
-                textBox.Text = "0.00";
+                betAmountTextBox.Text = "0.00";
                 isMessageError = true;
             }
 
             // Maintain cursor position
-            textBox.SelectionStart = textBox.Text.Length;
+            betAmountTextBox.SelectionStart = betAmountTextBox.Text.Length;
 
             // Balance validation
-            if (double.TryParse(textBox.Text, out double bet) && bet > this.api.GetBalance())
+            if (decimal.TryParse(betAmountTextBox.Text, out decimal bet) && bet > _gui.GetBalance())
             {
-                textBox.Text = "0.00";
+                betAmountTextBox.Text = "0.00";
                 isMessageError = true;
             }
 
@@ -99,18 +81,18 @@ namespace OpenSteak_Mines_WPF
             }
 
             // Reattach event
-            textBox.TextChanged += BetAmountTxt_TextChanged;
+            betAmountTextBox.TextChanged += BetAmountTxt_TextChanged;
         }
 
         private void ShowErrorForFiveSeconds(string message)
         {
-            lock (errorLock)
+            lock (_errorLock)
             {
-                if (isErrorShowing)
+                if (_isErrorMessageShowing)
                 {
                     return; // Avoid showing multiple errors simultaneously
                 }
-                isErrorShowing = true;
+                _isErrorMessageShowing = true;
             }
 
             // Display the error message
@@ -129,18 +111,20 @@ namespace OpenSteak_Mines_WPF
                     errorMsgLabel.Visibility = Visibility.Collapsed;
                 });
 
-                lock (errorLock)
+                lock (_errorLock)
                 {
-                    isErrorShowing = false;
+                    _isErrorMessageShowing = false;
                 }
             });
         }
-
-
+        private void CashOutOrStartButton_Click(object sender, RoutedEventArgs e)
+        {
+            this._gui.StartOrCashout();
+        }
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            this.api.StartGame();
+            
         }
     }
 }

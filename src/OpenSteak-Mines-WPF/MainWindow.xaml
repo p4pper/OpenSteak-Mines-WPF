@@ -68,7 +68,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Button x:Name="cashOutORStartBtn" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Height="39" Width="200"  Foreground="White" Margin="25,216,0,0" Click="t1_Click" FontSize="16" FontFamily="Open Sans" Style="{DynamicResource BetButton}"/>
+        <Button x:Name="CashOutOrStartButton" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Height="39" Width="200"  Foreground="White" Margin="25,216,0,0" Click="CashOutOrStartButton_Click" FontSize="16" FontFamily="Open Sans" Style="{DynamicResource BetButton}"/>
         <Grid x:Name="MinesGrid" Margin="270,54,29,50">
             <!-- The buttons will be added dynamically in the code-behind -->
         </Grid>
