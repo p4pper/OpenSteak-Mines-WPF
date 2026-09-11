@@ -1,7 +1,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/harethpy/OpenSteak-Mines">
-    <img src="https://i.ibb.co/cxrG4Nz/logo.png" alt="Logo" width="128" height="128">
+    <img width="1200" height="280" alt="image" src="https://github.com/user-attachments/assets/590c4f99-c567-4334-a965-dbabd4ddc00d" />
   </a>
 
   <h3 align="center">OpenSteak Project</h3>
@@ -34,28 +34,20 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-![Untitled-Project](https://github.com/user-attachments/assets/4ff5ba89-71a5-494c-89b0-77be984ec80b)  
-
 I wanted to create something that combined learning, ethical awareness, and technical practice.   
 This project is a Minesweeper-inspired game with probability in-mind, as well as bet amount and multiplier amount that increases on every gem opened.
-I have an explanation on how this works, and why actually you'll never profit or win off this in the long-term.
+I have an explanation on how this works, and why actually you'll will not be positive accoridng to the mathematics of these games in the long run
 
 * **Applied Probability:** How probability affects the odds and risks often misunderstood in gambling scenarios.  
-* **GUI Framework and C#** I mainly built this in WPF, however, you can take the core game logic and hook it with any GUI Framework you like. Read more about this in the documentation
+* **GUI Framework and C#** Built using .NET Framework, C#, XML & WPF UI (Win10+)
 * **Awareness:** Beyond coding, this project focuses on the addictive mechanics of gambling and raises awareness on its dangers and backlogic.
 
 **Built with**
 - C# & .NET Framework 4.5
 - WPF
+
+<img width="679" height="585" alt="image" src="https://github.com/user-attachments/assets/ef1935d5-a725-45dc-a150-def91192bd7f" />
  
-## Getting Started
-TODO Add explanation to set up
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Expand Games
-      
 <!-- CONTRIBUTING -->
 ## Contributing
 
